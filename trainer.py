@@ -249,8 +249,8 @@ class AgentFormerTrainer(pl.LightningModule):
 
     #def validation_epoch_end(self, outputs):
     #    self._epoch_end(outputs, 'val')
-    def on_validation_epoch_end(self):
-        epoch_average = self.validation_step_outputs
+    def on_validation_epoch_end(self): 
+        self._epoch_end(self.validation_step_outputs, 'val')
         #self.log("validation_epoch_average", epoch_average)
         self.validation_step_outputs.clear()  # free memory
 

@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parser.add_argument('--cfg', default='eth_agentformer_sfm_pre8-2')
     parser.add_argument('--mode', '-m', default='train')
     parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('--num_workers', type=int, default=24)
+    parser.add_argument('--num_workers', type=int, default=12)
     parser.add_argument('--devices', type=int, default=None)
     parser.add_argument('--no_gpu', '-ng', action='store_true', default=False)
     parser.add_argument('--dont_resume', '-dr', '-nc', dest='resume', action='store_false', default=True)
