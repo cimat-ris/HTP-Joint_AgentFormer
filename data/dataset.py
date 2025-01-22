@@ -2,7 +2,7 @@ import os
 import torch
 
 from itertools import zip_longest
-from torch._six import string_classes
+string_classes = str
 from torch.utils.data import Dataset
 
 from data.nuscenes_pred_split import get_nuscenes_pred_split

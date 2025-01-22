@@ -11,7 +11,7 @@ from eval import eval_one_seq
 from metrics import stats_func
 from utils.utils import mkdir_if_missing
 from utils.torch import get_scheduler
-from viz_utils import plot_anim_grid, get_metrics_str
+from visualization_utils import plot_anim_grid, get_metrics_str
 
 
 def save_trajectories(trajectory, save_dir, seq_name, frame, suffix=''):
@@ -90,6 +90,7 @@ class AgentFormerTrainer(pl.LightningModule):
         self.hparams.update(vars(args))
         self.model_name = "_".join(self.cfg.id.split("_")[1:])
         self.dataset_name = self.cfg.id.split("_")[0].replace('-', '_')
+        self.validation_step_outputs = []
 
     def update_args(self, args):
         self.args = args
@@ -122,7 +123,9 @@ class AgentFormerTrainer(pl.LightningModule):
         return self._step(batch, 'train')
 
     def validation_step(self, batch, batch_idx):
-        return self._step(batch, 'val')
+        loss = self._step(batch, 'val')
+        self.validation_step_outputs.append(loss)
+        return loss
 
     def test_step(self, batch, batch_idx):
         return_dict = self._step(batch, 'test')
@@ -244,8 +247,12 @@ class AgentFormerTrainer(pl.LightningModule):
         self._epoch_end(outputs, 'train')
         self.model.step_annealer()
 
-    def validation_epoch_end(self, outputs):
-        self._epoch_end(outputs, 'val')
+    #def validation_epoch_end(self, outputs):
+    #    self._epoch_end(outputs, 'val')
+    def on_validation_epoch_end(self):
+        epoch_average = self.validation_step_outputs
+        #self.log("validation_epoch_average", epoch_average)
+        self.validation_step_outputs.clear()  # free memory
 
     def test_epoch_end(self, outputs):
         self._epoch_end(outputs)
